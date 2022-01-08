@@ -10,5 +10,6 @@ namespace WebAPI.Models
         }
 
         public DbSet<Customer> Customer { get; set; }
+        public DbSet<Item> Item { get; set; }
     }
 }
