@@ -9,8 +9,8 @@ using WebAPI.Models;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(PalitaxDbContext))]
-    [Migration("20220108212128_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220108215034_Add Customer")]
+    partial class AddCustomer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
