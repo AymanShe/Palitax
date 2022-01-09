@@ -14,7 +14,7 @@ namespace WebAPI.Models
         [Column(TypeName = "nvarchar(50)")]
         public string State { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        public string City { get; set; }
+        public string ZipCode { get; set; }
 
     }
 }
