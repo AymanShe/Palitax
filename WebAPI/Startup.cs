@@ -6,12 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Models;
+using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -29,8 +31,16 @@ namespace WebAPI
         {
 
             services.AddControllers();
+            //SQL connection
             services.AddDbContext<PalitaxDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Development")));
+            //TaxJar external WebAPI service
+            services.AddHttpClient<ITaxJarService, TaxJarService>( c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("TaxJar:BaseUrl"));
+                c.DefaultRequestHeaders.Add(HeaderNames.Authorization, Configuration.GetValue<string>("TaxJar:ApiKey"));
+            });
+            //Swagger
             services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
