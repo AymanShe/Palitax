@@ -10,7 +10,5 @@ namespace WebAPI.Models
         [Column(TypeName = "nvarchar(100)")]
         public string Description { get; set; }
         public float Price { get; set; }
-        [Column(TypeName = "nvarchar(3)")]
-        public string Currency { get; set; }
     }
 }
