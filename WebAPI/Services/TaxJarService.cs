@@ -9,7 +9,7 @@ namespace WebAPI.Services
 {
     public interface ITaxJarService
     {
-        Task<float?> GetTotalTax(string country, string state, string zipCode, float amount);
+        Task<float> GetTotalTax(string country, string state, string zipCode, float amount);
     }
     public class TaxJarService : ITaxJarService
     {
@@ -20,7 +20,7 @@ namespace WebAPI.Services
             _httpClient = httpClient;
         }
 
-        public async Task<float?> GetTotalTax(string country, string state, string zipCode, float amount)
+        public async Task<float> GetTotalTax(string country, string state, string zipCode, float amount)
         {
             var requestModel = new TaxJarRequestModel
             {
@@ -44,7 +44,7 @@ namespace WebAPI.Services
                 taxJarResponseModel = await response.Content.ReadFromJsonAsync<TaxJarResponseModel>();
             }
 
-            return taxJarResponseModel?.tax?.amount_to_collect;
+            return taxJarResponseModel.tax.amount_to_collect;
         }
     }
 }
