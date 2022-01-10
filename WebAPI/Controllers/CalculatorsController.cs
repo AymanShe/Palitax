@@ -27,14 +27,17 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CalculatorInputModel inputModel)
         {
+            //TODO add authentication to your API
             //TODO rearrange awaits for max performance
             //TODO validate input
+            //TODO try catch
 
             CalculatorResponseModel response = new CalculatorResponseModel();
             //fetch user
             var customer = await _context.Customer.FindAsync(inputModel.CustomerId);
             if (customer == null)
             {
+                //TODO gather all errors and return them all
                 return NotFound("Customer was not found");
             }
             response.CustomerName = customer.FullName;
@@ -53,6 +56,7 @@ namespace WebAPI.Controllers
                 response.ItemList.Add(new ItemListResponseModel
                 {
                     Item = item,
+                    //TODO what if quantity is 0
                     Total = item.Price * inputItem.Quantity
                 });
             }

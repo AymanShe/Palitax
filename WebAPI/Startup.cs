@@ -35,10 +35,19 @@ namespace WebAPI
             services.AddDbContext<PalitaxDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Development")));
             //TaxJar external WebAPI service
-            services.AddHttpClient<ITaxJarService, TaxJarService>( c =>
+            services.AddHttpClient<ITaxJarService, TaxJarService>(c =>
+           {
+               c.BaseAddress = new Uri(Configuration.GetValue<string>("TaxJar:BaseUrl"));
+               c.DefaultRequestHeaders.Add(HeaderNames.Authorization, Configuration.GetValue<string>("TaxJar:ApiKey"));
+           });
+            //allow CORS
+            services.AddCors(options =>
             {
-                c.BaseAddress = new Uri(Configuration.GetValue<string>("TaxJar:BaseUrl"));
-                c.DefaultRequestHeaders.Add(HeaderNames.Authorization, Configuration.GetValue<string>("TaxJar:ApiKey"));
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                    .WithMethods("GET");
+                });
             });
             //Swagger
             services.AddSwaggerGen(c =>
@@ -58,6 +67,9 @@ namespace WebAPI
             }
 
             app.UseRouting();
+
+            //allow CORS
+            app.UseCors();
 
             app.UseAuthorization();
 
