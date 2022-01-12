@@ -30,7 +30,6 @@ namespace WebAPI.Controllers
         {
             try
             {
-
                 //TODO add authentication to your API
                 //TODO rearrange awaits for max performance
                 //TODO validate input
@@ -76,7 +75,7 @@ namespace WebAPI.Controllers
             }
             catch
             {
-                throw new Exception("Something went wrong. Please contact Admin");
+                throw new Exception("Something went wrong. Please contact Admin or try again later");
             }
         }
     }

@@ -27,11 +27,9 @@ namespace WebAPI.Controllers
             try
             {
                 return await _context.Customer.ToListAsync();
-
             }
             catch
             {
-
                 throw new Exception("Something went wrong. Please contact Admin or try again later");
             }
         }
