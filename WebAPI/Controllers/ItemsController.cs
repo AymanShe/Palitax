@@ -24,84 +24,14 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Item>>> GetItem()
         {
-            return await _context.Item.ToListAsync();
-        }
-
-        // GET: api/Items/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
-        {
-            var item = await _context.Item.FindAsync(id);
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            return item;
-        }
-
-        // PUT: api/Items/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
-        {
-            if (id != item.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(item).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return await _context.Item.ToListAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch
             {
-                if (!ItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw new Exception("Something went wrong. Please contact Admin or try again later");
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Items
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
-        {
-            _context.Item.Add(item);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetItem", new { id = item.Id }, item);
-        }
-
-        // DELETE: api/Items/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
-        {
-            var item = await _context.Item.FindAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            _context.Item.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _context.Item.Any(e => e.Id == id);
         }
     }
 }
