@@ -45,8 +45,9 @@ namespace WebAPI
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
-                    .WithMethods("GET");
+                    builder.WithOrigins(Configuration.GetValue<string>("FronEndAppUrl"))
+                    .AllowAnyMethod()
+               .AllowAnyHeader();
                 });
             });
             //Swagger
