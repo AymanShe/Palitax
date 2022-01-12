@@ -29,11 +29,18 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
             //SQL connection
-            services.AddDbContext<PalitaxDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("Development")));
+            var server = Configuration["DBServer"] ?? "host.docker.internal";
+            var port = Configuration["DBPort"];
+            var user = Configuration["DBUser"];
+            var password = Configuration["DBPassword"];
+
+            var connectionString = $"Server={server},{port};Initial Catalog=PalitaxDB;User ID={user};Password={password}";
+
+            services.AddDbContext<PalitaxDbContext>(options => options.UseSqlServer(connectionString));
+
             //TaxJar external WebAPI service
             services.AddHttpClient<ITaxJarService, TaxJarService>(c =>
            {
