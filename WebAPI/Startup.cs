@@ -19,12 +19,15 @@ namespace WebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
+        private IWebHostEnvironment CurrentEnvironment { get; set; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,12 +35,20 @@ namespace WebAPI
             services.AddControllers();
 
             //SQL connection
-            var server = Configuration["DBServer"] ?? "host.docker.internal";
-            var port = Configuration["DBPort"];
-            var user = Configuration["DBUser"];
-            var password = Configuration["DBPassword"];
+            string connectionString;
+            if (CurrentEnvironment.IsDevelopment())
+            {
+                connectionString = Configuration.GetConnectionString("Development");
+            }
+            else
+            {
+                var server = Configuration["DBServer"] ?? "host.docker.internal";
+                var port = Configuration["DBPort"];
+                var user = Configuration["DBUser"];
+                var password = Configuration["DBPassword"];
 
-            var connectionString = $"Server={server},{port};Initial Catalog=PalitaxDB;User ID={user};Password={password}";
+                connectionString = $"Server={server},{port};Initial Catalog=PalitaxDB;User ID={user};Password={password};TrustServerCertificate=true";
+            }
 
             services.AddDbContext<PalitaxDbContext>(options => options.UseSqlServer(connectionString));
 
