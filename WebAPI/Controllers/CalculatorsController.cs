@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPI.Models;
@@ -56,16 +57,17 @@ namespace WebAPI.Controllers
                 response.ItemList.Add(new ItemListResponseModel
                 {
                     Item = item,
+                    Quantity = inputItem.Quantity,
                     //TODO what if quantity is 0
                     Total = item.Price * inputItem.Quantity
                 });
             }
 
             //calculate
-            var priceBeforeTax = Calculator.GetTotal(itemList, inputModel.ItemsList);
+            response.SubTotal = Calculator.GetTotal(itemList, inputModel.ItemsList);
             //TODO find a better way than method injection
-            response.Tax = await Calculator.GetTotalTax(customer, priceBeforeTax, _taxJarService);
-            response.TotalPrice = response.Tax + priceBeforeTax;
+            response.Tax = await Calculator.GetTotalTax(customer, response.SubTotal, _taxJarService);
+            response.TotalPrice = (float)Math.Round(response.Tax + response.SubTotal, 2);
 
             return Ok(response);
         }
