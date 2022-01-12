@@ -40,16 +40,10 @@ namespace WebAPI
                c.BaseAddress = new Uri(Configuration.GetValue<string>("TaxJar:BaseUrl"));
                c.DefaultRequestHeaders.Add(HeaderNames.Authorization, Configuration.GetValue<string>("TaxJar:ApiKey"));
            });
+
             //allow CORS
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.WithOrigins(Configuration.GetValue<string>("FronEndAppUrl"))
-                    .AllowAnyMethod()
-               .AllowAnyHeader();
-                });
-            });
+            services.AddCors();
+
             //Swagger
             services.AddSwaggerGen(c =>
                 {
@@ -70,7 +64,10 @@ namespace WebAPI
             app.UseRouting();
 
             //allow CORS
-            app.UseCors();
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseAuthorization();
 
